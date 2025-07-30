@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import FormInput from "../components/FormInput";
 import { useState } from "react";
+import { useLogin } from "../hooks/useLogin";
 
 function Login() {
+  const { isPanding, login } = useLogin();
   const [errors, setErrors] = useState({});
   const handelSubmit = (e) => {
     e.preventDefault();
@@ -49,7 +51,10 @@ function Login() {
           </form>
           <div className="text-center ">
             <span className="opacity-[0.6]"> Sizda Profil Bo'lmasa</span>
-            <Link className="ml-1.5 underline opacity-[0.9]" to="/siginup">
+            <Link
+              className="ml-1.5 link opacity-[0.9] link-secondary"
+              to="/siginup"
+            >
               Signup
             </Link>
             <br />

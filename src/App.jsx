@@ -9,9 +9,14 @@ import { Home, Login, Profile, Siginup, SingleImage } from "./pages";
 
 import { useSelector } from "react-redux";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./fairbase/config";
+import { login, authReady } from "./app/features/userSlice";
+import { useDispatch } from "react-redux";
 
 function App() {
-  const { user } = useSelector((store) => store.user);
+  const { user, isAuthReady } = useSelector((store) => store.user);
+  const dispatch = useDispatch();
   const routes = createBrowserRouter([
     {
       path: "/",
@@ -44,7 +49,13 @@ function App() {
       element: user ? <Navigate to="/" /> : <Siginup />,
     },
   ]);
-  return <RouterProvider router={routes} />;
+
+  onAuthStateChanged(auth, (user) => {
+    dispatch(login(user));
+    dispatch(authReady());
+  });
+
+  return <>{isAuthReady && <RouterProvider router={routes} />}</>;
 }
 
 export default App;

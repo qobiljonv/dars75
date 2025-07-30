@@ -1,11 +1,13 @@
 import { useState } from "react";
 import FormInput from "../components/FormInput";
 import { Link } from "react-router-dom";
+import { useSignup } from "../hooks/useSignup";
 
 function Signup() {
+  const { isPanding, signup } = useSignup();
   const [errors, setErrors] = useState({});
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.target);
@@ -14,6 +16,8 @@ function Signup() {
     const email = formData.get("email");
     const password = formData.get("password");
     const repeatPassword = formData.get("repeatPassword");
+
+    await signup(displayName, email, password, repeatPassword);
 
     const newErrors = {};
 
@@ -65,12 +69,20 @@ function Signup() {
               error={errors.repeatPassword}
             />
             <div className="flex justify-end mt-10">
-              <button className="btn btn-primary">Submit</button>
+              {isPanding && (
+                <button className="btn btn-primary">Loding...</button>
+              )}
+              {!isPanding && (
+                <button className="btn btn-primary">Signup</button>
+              )}
             </div>
           </form>
           <div className="text-center ">
             <span className="opacity-[0.6]"> Sizda Profil Bo'sa</span>
-            <Link className="ml-1.5 underline opacity-[0.9]" to="/login">
+            <Link
+              className="ml-1.5 link link-secondary opacity-[0.9]"
+              to="/login"
+            >
               Login
             </Link>
             <br />{" "}
